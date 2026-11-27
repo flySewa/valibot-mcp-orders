@@ -1,0 +1,36 @@
+{
+  "name": "valibot-mcp-orders",
+  "version": "1.0.0",
+  "description": "Example MCP server for a made-up shop, built with the MCP TypeScript SDK v2 and Valibot",
+  "scripts": {
+    "test": "vitest run",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/flySewa/valibot-mcp-orders.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/flySewa/valibot-mcp-orders/issues"
+  },
+  "homepage": "https://github.com/flySewa/valibot-mcp-orders#readme",
+  "dependencies": {
+    "@modelcontextprotocol/server": "2.4.0",
+    "@valibot/to-json-schema": "1.8.0",
+    "valibot": "1.5.0"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/client": "2.4.0",
+    "@types/node": "26.6.11",
+    "typescript": "7.0.2",
+    "vitest": "5.1.2"
+  },
+  "engines": {
+    "node": ">=26"
+  }
+}

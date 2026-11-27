@@ -1,0 +1,445 @@
+{
+  "tools": [
+    {
+      "name": "find-order",
+      "title": "Find order",
+      "description": "Look up orders by order number or by customer email. Give one of the two.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "orderNumber": {
+            "type": "string",
+            "pattern": "^ORD-\\d{4}$",
+            "description": "Order number, for example ORD-1042."
+          },
+          "customerEmail": {
+            "type": "string",
+            "format": "email",
+            "description": "Customer email address, for example amara@example.com."
+          }
+        },
+        "required": [],
+        "$schema": "https://json-schema.org/draft/2020-12/schema"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "orders": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "orderNumber": {
+                  "type": "string",
+                  "pattern": "^ORD-\\d{4}$",
+                  "description": "Order number, for example ORD-1042."
+                },
+                "customerName": {
+                  "type": "string",
+                  "description": "Customer full name."
+                },
+                "customerEmail": {
+                  "type": "string",
+                  "format": "email",
+                  "description": "Customer email address, for example amara@example.com."
+                },
+                "status": {
+                  "enum": [
+                    "pending",
+                    "packed",
+                    "shipped",
+                    "delivered"
+                  ],
+                  "type": "string",
+                  "description": "Order status. Only pending and packed orders can have their address changed."
+                },
+                "orderDate": {
+                  "type": "string",
+                  "format": "date",
+                  "description": "Date the order was placed."
+                },
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "description": "Product name."
+                      },
+                      "quantity": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "description": "How many were bought."
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "quantity"
+                    ]
+                  },
+                  "description": "Products in the order."
+                },
+                "deliveryAddress": {
+                  "type": "object",
+                  "properties": {
+                    "street": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "House number and street name."
+                    },
+                    "city": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "Town or city."
+                    },
+                    "postcode": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "Postcode or ZIP code."
+                    },
+                    "country": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "Country name, for example United Kingdom."
+                    }
+                  },
+                  "required": [
+                    "street",
+                    "city",
+                    "postcode",
+                    "country"
+                  ]
+                }
+              },
+              "required": [
+                "orderNumber",
+                "customerName",
+                "customerEmail",
+                "status",
+                "orderDate",
+                "items",
+                "deliveryAddress"
+              ]
+            },
+            "description": "Matching orders."
+          }
+        },
+        "required": [
+          "orders"
+        ],
+        "$schema": "https://json-schema.org/draft/2020-12/schema"
+      },
+      "annotations": {
+        "readOnlyHint": true
+      }
+    },
+    {
+      "name": "change-delivery-address",
+      "title": "Change delivery address",
+      "description": "Replace the delivery address of an order. Only works while the order is pending or packed. Needs the full new address.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "orderNumber": {
+            "type": "string",
+            "pattern": "^ORD-\\d{4}$",
+            "description": "Order number, for example ORD-1042."
+          },
+          "newAddress": {
+            "type": "object",
+            "properties": {
+              "street": {
+                "type": "string",
+                "minLength": 1,
+                "description": "House number and street name."
+              },
+              "city": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Town or city."
+              },
+              "postcode": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Postcode or ZIP code."
+              },
+              "country": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Country name, for example United Kingdom."
+              }
+            },
+            "required": [
+              "street",
+              "city",
+              "postcode",
+              "country"
+            ],
+            "description": "The full new delivery address."
+          }
+        },
+        "required": [
+          "orderNumber",
+          "newAddress"
+        ],
+        "$schema": "https://json-schema.org/draft/2020-12/schema"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "order": {
+            "type": "object",
+            "properties": {
+              "orderNumber": {
+                "type": "string",
+                "pattern": "^ORD-\\d{4}$",
+                "description": "Order number, for example ORD-1042."
+              },
+              "customerName": {
+                "type": "string",
+                "description": "Customer full name."
+              },
+              "customerEmail": {
+                "type": "string",
+                "format": "email",
+                "description": "Customer email address, for example amara@example.com."
+              },
+              "status": {
+                "enum": [
+                  "pending",
+                  "packed",
+                  "shipped",
+                  "delivered"
+                ],
+                "type": "string",
+                "description": "Order status. Only pending and packed orders can have their address changed."
+              },
+              "orderDate": {
+                "type": "string",
+                "format": "date",
+                "description": "Date the order was placed."
+              },
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "Product name."
+                    },
+                    "quantity": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "description": "How many were bought."
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "quantity"
+                  ]
+                },
+                "description": "Products in the order."
+              },
+              "deliveryAddress": {
+                "type": "object",
+                "properties": {
+                  "street": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "House number and street name."
+                  },
+                  "city": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Town or city."
+                  },
+                  "postcode": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Postcode or ZIP code."
+                  },
+                  "country": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Country name, for example United Kingdom."
+                  }
+                },
+                "required": [
+                  "street",
+                  "city",
+                  "postcode",
+                  "country"
+                ]
+              }
+            },
+            "required": [
+              "orderNumber",
+              "customerName",
+              "customerEmail",
+              "status",
+              "orderDate",
+              "items",
+              "deliveryAddress"
+            ],
+            "description": "The updated order."
+          }
+        },
+        "required": [
+          "order"
+        ],
+        "$schema": "https://json-schema.org/draft/2020-12/schema"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true
+      }
+    },
+    {
+      "name": "list-orders",
+      "title": "List orders",
+      "description": "List orders, newest first. Optionally filter by a date range and by status. Leave filters out to list everything.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "fromDate": {
+            "type": "string",
+            "format": "date",
+            "description": "Earliest order date to include, YYYY-MM-DD."
+          },
+          "toDate": {
+            "type": "string",
+            "format": "date",
+            "description": "Latest order date to include, YYYY-MM-DD."
+          },
+          "status": {
+            "enum": [
+              "pending",
+              "packed",
+              "shipped",
+              "delivered"
+            ],
+            "type": "string",
+            "description": "Order status. Only pending and packed orders can have their address changed."
+          }
+        },
+        "required": [],
+        "$schema": "https://json-schema.org/draft/2020-12/schema"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "orders": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "orderNumber": {
+                  "type": "string",
+                  "pattern": "^ORD-\\d{4}$",
+                  "description": "Order number, for example ORD-1042."
+                },
+                "customerName": {
+                  "type": "string",
+                  "description": "Customer full name."
+                },
+                "customerEmail": {
+                  "type": "string",
+                  "format": "email",
+                  "description": "Customer email address, for example amara@example.com."
+                },
+                "status": {
+                  "enum": [
+                    "pending",
+                    "packed",
+                    "shipped",
+                    "delivered"
+                  ],
+                  "type": "string",
+                  "description": "Order status. Only pending and packed orders can have their address changed."
+                },
+                "orderDate": {
+                  "type": "string",
+                  "format": "date",
+                  "description": "Date the order was placed."
+                },
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "description": "Product name."
+                      },
+                      "quantity": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "description": "How many were bought."
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "quantity"
+                    ]
+                  },
+                  "description": "Products in the order."
+                },
+                "deliveryAddress": {
+                  "type": "object",
+                  "properties": {
+                    "street": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "House number and street name."
+                    },
+                    "city": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "Town or city."
+                    },
+                    "postcode": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "Postcode or ZIP code."
+                    },
+                    "country": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "Country name, for example United Kingdom."
+                    }
+                  },
+                  "required": [
+                    "street",
+                    "city",
+                    "postcode",
+                    "country"
+                  ]
+                }
+              },
+              "required": [
+                "orderNumber",
+                "customerName",
+                "customerEmail",
+                "status",
+                "orderDate",
+                "items",
+                "deliveryAddress"
+              ]
+            },
+            "description": "Matching orders."
+          }
+        },
+        "required": [
+          "orders"
+        ],
+        "$schema": "https://json-schema.org/draft/2020-12/schema"
+      },
+      "annotations": {
+        "readOnlyHint": true
+      }
+    }
+  ]
+}
